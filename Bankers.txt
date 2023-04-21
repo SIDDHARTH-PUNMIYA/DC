@@ -1,0 +1,118 @@
+package clgprogramspracs;
+import java.util.Scanner;
+public class New_Banker {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);	
+		System.out.println("Enter the numbr of process ");
+	    int pro =sc.nextInt();
+		System.out.println("Enter the numbr of resources ");
+	    int res =sc.nextInt();
+	    int resources[] = new int[res];
+		System.out.println("Enter the Instance resources ");
+		  for(int i=0;i<res;i++) {
+			  System.out.println("Instance for Resource R"+(i));
+					  resources[i]=sc.nextInt();
+	    	 }
+		  int alloc[][]= new int[pro][res];
+		System.out.println("Enter allocated matrix");  
+	   for(int i=0;i<pro;i++) {
+		   System.out.println("Enter for process "+(i));
+		   for(int j=0;j<res;j++) {
+			   System.out.println("Enter resource R"+j+" for process"+i);
+			   alloc[i][j]=sc.nextInt();
+		   }
+		 }
+	   System.out.println("ALLOCATED MATRIX ");
+	   printMatrix(alloc, pro, res);
+		int need[][]= new int[pro][res];
+		System.out.println("Enter MAX need matrix");  
+		   for(int i=0;i<pro;i++) {
+			   System.out.println("Enter for process "+(i));
+			   for(int j=0;j<res;j++) {
+				   System.out.println("Enter resource R"+j+" for process"+i);
+				   need[i][j]=sc.nextInt();
+			   }
+			 }
+		   System.out.println("MAX NEED MATRIX");
+		   printMatrix(need, pro, res);
+		   calc(need,alloc,resources,pro);
+	}
+	
+	static void calc(int need[][],int alloc[][],int resources[],int pro) {
+		int res=resources.length;
+		int total[] = new int[resources.length];
+		for(int i=0;i<alloc[0].length;i++) {
+			
+			for(int j=0;j<alloc.length;j++) {
+				total[i] +=alloc[j][i]; 
+			}
+		}
+		System.out.println("The total resources allocate ");
+		printarray(total);
+		System.out.println();
+		
+		int available[]= new int[res];
+		System.out.println("Available Instance for resources ");
+		for(int k=0;k<res;k++) {
+			available[k]=resources[k]-total[k];
+		}
+		int rem_need[][]= new int[pro][res];
+		System.out.println("Remaning matrix");  
+	   for(int i=0;i<pro;i++) {
+		   for(int j=0;j<res;j++) {
+			 rem_need[i][j]=need[i][j]-alloc[i][j];
+			  
+		   }
+		 }
+		printMatrix(rem_need, pro, res);
+	findsafeseq(rem_need,available,alloc,pro,res);	
+	}
+	private static void findsafeseq(int[][] rem_need, int[] available, int[][] alloc, int pro, int res) {
+		
+		int c=pro;
+		boolean check[] = new boolean[pro];
+		System.out.println("Safe seq");
+		while(c>0) {
+			int f=0;	
+			for(int i=0;i<pro;i++) {
+				int val=0;
+				for(int j=0;j<res;j++) {
+				if(available[j]>=rem_need[i][j] & check[i]!=true) {
+					val++;
+				}else {
+					break;
+				}
+				}
+				if(val==res) {
+					 for(int k=0;k<res;k++) {
+				        	available[k]=alloc[i][k]+available[k]; 
+				        	 }
+					c--;
+					check[i]=true;
+					System.out.println("Process "+i+" ->");
+				}
+				
+			}
+			if(f==0) {
+				System.out.println("SYSTEM IN DEADLOCK");
+				break;
+			}
+				}
+			}
+
+	static void printMatrix(int a[][],int pro,int res) {
+		for(int i=0;i<pro;i++) {
+			for(int j =0;j<res;j++) {
+				System.out.print(a[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
+	static void printarray(int a[]) {
+		for(int i=0;i<a.length;i++) {
+			System.out.print(a[i]+" ");
+		}
+		System.out.println();
+	}	
+}
