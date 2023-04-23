@@ -1,0 +1,64 @@
+package clgprogramspracs;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Scanner;
+
+public class GlobalDistributedAvg {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the no of clocks");
+		int n = sc.nextInt();
+		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+		long t[]=new long[n];
+		
+		for (int i = 0; i < n; i++) {
+			System.out.println("Enter the time for Clock" +(i+1));	
+			try {
+				t[i]=sdf.parse(sc.next()).getTime();
+			} catch (ParseException e) {
+								e.printStackTrace();
+			}
+		}
+		
+		Arrays.sort(t);
+		
+		
+		for (int i = 0; i < t.length; i++) {
+			System.out.println("The sorted order is "+new Date(t[i]).getMinutes()+":"+new Date(t[i]).getSeconds() );
+		}
+	System.out.println("Enter the skew percentage");
+		int skew=sc.nextInt();
+		sc.close();
+		float val = (float)(skew*n)/(float)100;
+		System.out.println(val);
+		int ans = (int)val;
+		if(ans<1){
+			ans=1;
+		}
+		System.out.println(ans);
+		
+		System.out.println("These are the time that wont be included for calculation");
+		
+		for (int i = 0; i < ans; i++) {
+			System.out.println(new Date(t[i]).getMinutes()+":"+new Date(t[i]).getSeconds());
+		}
+		
+		for (int i = n-1; i >=n-ans; i--) {
+			System.out.println(new Date(t[i]).getMinutes()+":"+new Date(t[i]).getSeconds());
+		}
+		
+		long avg=0;
+		
+		for (int i = ans; i < n-ans; i++) {
+			avg+=t[i];
+		}
+		
+		avg = avg/(n-2*ans);
+		System.out.println("The final sync time is "+new Date(avg).getMinutes()+":"+new Date(avg).getSeconds());
+	}
+
+}

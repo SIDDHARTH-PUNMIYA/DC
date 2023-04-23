@@ -1,0 +1,60 @@
+package clgprogramspracs;
+
+public class MultiThreading implements Runnable {
+int value=0,a,b;
+	public MultiThreading(int value,int a ,int b){
+		this.a=a;
+		this.b=b;
+		this.value=value;
+	}
+	
+	public void run() {
+		
+		for (int i = 0; i < a; i++) {
+			value+=1;
+			System.out.println(Thread.currentThread().getName()+" has added +1 to the value");
+			
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+		}
+		
+		for (int i = 0; i < b; i++) {
+			value-=1;
+			System.out.println(Thread.currentThread().getName()+" has subtracted -1 to the value");
+			
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		
+	}
+	
+	public static void main(String[] args) {
+		MultiThreading m = new MultiThreading(0,5,3);
+		MultiThreading m2 = new MultiThreading(0,2,2);
+		Thread t1 = new Thread(m);
+		Thread t2 = new Thread(m2);
+		t1.start();
+		t2.start();
+	}
+
+}
+//Thread-0 has added +1 to the value
+//Thread-1 has added +1 to the value
+//Thread-0 has added +1 to the value
+//Thread-1 has added +1 to the value
+//Thread-0 has added +1 to the value
+//Thread-1 has subtracted -1 to the value
+//Thread-0 has added +1 to the value
+//Thread-1 has subtracted -1 to the value
+//Thread-0 has added +1 to the value
+//Thread-0 has subtracted -1 to the value
+//Thread-0 has subtracted -1 to the value
+//Thread-0 has subtracted -1 to the value
